@@ -69,6 +69,12 @@ namespace lueing {
         return result;
     }
 
+    long long TimeUtil::GetCurrentTimeInSeconds()
+    {
+        return std::chrono::duration_cast<std::chrono::seconds>(
+            std::chrono::system_clock::now().time_since_epoch()).count();
+    }
+
     // if 2510 means 2025-10, then add some months to it, implement the method.
     long long TimeUtil::YearMonthAddMonths(long long int year_month, int months) {
         int year = year_month / 100;

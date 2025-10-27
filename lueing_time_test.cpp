@@ -120,3 +120,11 @@ TEST(LueingTimeTest, YearMonthAddMonths_NegativeCrossYear)
 {
     EXPECT_EQ(2410, lueing::TimeUtil::YearMonthAddMonths(2501, -3));
 }
+
+TEST(LueingTimeTest, GetCurrentTimeInSeconds_IsCloseToNow)
+{
+    auto now_seconds = std::chrono::duration_cast<std::chrono::seconds>(
+        std::chrono::system_clock::now().time_since_epoch()).count();
+    long long got = lueing::TimeUtil::GetCurrentTimeInSeconds();
+    EXPECT_NEAR(now_seconds, got, 1); // Allow a tolerance of 1 second
+}
