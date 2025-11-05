@@ -128,3 +128,37 @@ TEST(LueingTimeTest, GetCurrentTimeInSeconds_IsCloseToNow)
     long long got = lueing::TimeUtil::GetCurrentTimeInSeconds();
     EXPECT_NEAR(now_seconds, got, 1); // Allow a tolerance of 1 second
 }
+
+TEST(LueingTimeTest, GetXTimeInSeconds_MatchesLocalCalculation)
+{
+    // Capture now and compute expected trading seconds using the same rules as GetXTimeInSeconds
+    auto now = std::chrono::system_clock::now();
+    std::time_t now_c = std::chrono::system_clock::to_time_t(now);
+    std::tm now_tm = *std::localtime(&now_c);
+
+    int hour = now_tm.tm_hour;
+    int minute = now_tm.tm_min;
+    int second = now_tm.tm_sec;
+    long current_seconds = hour * 3600 + minute * 60 + second;
+
+    const long morning_start = 9 * 3600 + 30 * 60;  // 9:30
+    const long morning_end = 11 * 3600 + 30 * 60;   // 11:30
+    const long afternoon_start = 13 * 3600;         // 13:00
+    const long afternoon_end = 15 * 3600;           // 15:00
+
+    long expected = 0;
+    if (current_seconds >= morning_start && current_seconds < morning_end) {
+        expected = current_seconds - morning_start;
+    } else if (current_seconds >= morning_end && current_seconds < afternoon_start) {
+        expected = morning_end - morning_start;
+    } else if (current_seconds >= afternoon_start && current_seconds < afternoon_end) {
+        long morning_duration = morning_end - morning_start;
+        expected = morning_duration + (current_seconds - afternoon_start);
+    } else {
+        expected = 0;
+    }
+
+    long got = lueing::TimeUtil::GetXTimeInSeconds();
+    // Allow one second tolerance because GetXTimeInSeconds calls system_clock::now() internally
+    EXPECT_NEAR(static_cast<double>(expected), static_cast<double>(got), 1.0);
+}

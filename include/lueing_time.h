@@ -16,6 +16,8 @@ public:
     static long long YearMonthAddMonths(long long year_month, int months);
     // get current time in seconds since epoch
     static long long GetCurrentTimeInSeconds();
+    // get x time in seconds
+    static long GetXTimeInSeconds();
 };
 
 } // namespace lueing

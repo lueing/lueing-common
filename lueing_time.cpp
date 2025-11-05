@@ -94,4 +94,41 @@ namespace lueing {
         return year * 100 + month;
     }
 
+    long TimeUtil::GetXTimeInSeconds() {
+        // return trade time in seconds, if current time is in 9:30-11:30 then return seconds since 9:30, 
+        // if current time is 13:00-15:00 then return seconds since 9:30 but skip the noon break from 11:30 to 13:00
+        auto now = std::chrono::system_clock::now();
+        std::time_t now_c = std::chrono::system_clock::to_time_t(now);
+        std::tm now_tm = *std::localtime(&now_c);
+
+        int hour = now_tm.tm_hour;
+        int minute = now_tm.tm_min;
+        int second = now_tm.tm_sec;
+
+        // Convert current time to seconds since midnight
+        long current_seconds = hour * 3600 + minute * 60 + second;
+
+        // Define market times in seconds since midnight
+        const long morning_start = 9 * 3600 + 30 * 60;  // 9:30
+        const long morning_end = 11 * 3600 + 30 * 60;   // 11:30
+        const long afternoon_start = 13 * 3600;          // 13:00
+        const long afternoon_end = 15 * 3600;            // 15:00
+
+        // Morning session: 9:30-11:30
+        if (current_seconds >= morning_start && current_seconds < morning_end) {
+            return current_seconds - morning_start;
+        } else if (current_seconds >= morning_end && current_seconds < afternoon_start) {
+            // Noon break: 11:30-13:00
+            return morning_end - morning_start; // return total seconds of morning session
+        }
+        // Afternoon session: 13:00-15:00
+        else if (current_seconds >= afternoon_start && current_seconds < afternoon_end) {
+            // Morning session duration: 2 hours = 7200 seconds
+            long morning_duration = morning_end - morning_start;
+            return morning_duration + (current_seconds - afternoon_start);
+        }
+
+        return 0;
+    }
+
 } // namespace lueing
