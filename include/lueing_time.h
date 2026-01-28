@@ -18,6 +18,8 @@ public:
     static long long GetCurrentTimeInSeconds();
     // get x time in seconds
     static long GetXTimeInSeconds();
+    // ctp hq time
+    static long GetCtpHqTimeInSeconds(const char *time);
 };
 
 } // namespace lueing

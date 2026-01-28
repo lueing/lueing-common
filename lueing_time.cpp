@@ -25,21 +25,21 @@ namespace lueing {
     long long TimeUtil::CurrentTimeAddSeconds(long long time, long long seconds)
     {
         // Parse the time format: YYYYMMDDHHMMSSmmm
-        long long milliseconds = time % 1000;
+        const long long milliseconds = time % 1000;
         time /= 1000;
-        
-        int second = time % 100;
+
+        const int second = static_cast<int>(time % 100);
         time /= 100;
-        int minute = time % 100;
+        const int minute = static_cast<int>(time % 100);
         time /= 100;
-        int hour = time % 100;
+        const int hour = static_cast<int>(time % 100);
         time /= 100;
-        int day = time % 100;
+        const int day = static_cast<int>(time % 100);
         time /= 100;
-        int month = time % 100;
+        const int month = static_cast<int>(time % 100);
         time /= 100;
-        int year = time;
-        
+        const int year = static_cast<int>(time);
+
         // Create tm structure
         std::tm tm_time = {};
         tm_time.tm_year = year - 1900;
@@ -54,8 +54,8 @@ namespace lueing {
         time_t_val += seconds;
         
         // Convert back to tm
-        std::tm *new_tm = std::localtime(&time_t_val);
-        
+        const std::tm *new_tm = std::localtime(&time_t_val);
+
         // Format back to YYYYMMDDHHMMSSmmm
         long long result = 0;
         result += (new_tm->tm_year + 1900) * 10000000000000LL;
@@ -77,8 +77,8 @@ namespace lueing {
 
     // if 2510 means 2025-10, then add some months to it, implement the method.
     long long TimeUtil::YearMonthAddMonths(long long int year_month, int months) {
-        int year = year_month / 100;
-        int month = year_month % 100;
+        int year = static_cast<int>(year_month / 100);
+        int month = static_cast<int>(year_month % 100);
 
         month += months;
         int year_delta = 0;
@@ -131,4 +131,24 @@ namespace lueing {
         return 0;
     }
 
+    long TimeUtil::GetCtpHqTimeInSeconds(const char* time)
+    {
+        long seconds = -1;
+        int checks[6] = {0, 1, 3, 4, 6, 7};
+
+        // check valid
+        for (int check : checks) {
+            if (time[check] < '0' || time[check] > '9') {
+                return -1;
+            }
+        }
+
+        seconds = ((time[0] - '0') * 10 + time[1] - '0') * 3600 + ((time[3] - '0') * 10 + time[4] - '0') * 60
+                + (time[6] - '0') * 10 + time[7] - '0';
+
+        if (seconds < 0 || seconds > 24 * 3600) {
+            return -1;
+        }
+        return seconds;
+    }
 } // namespace lueing
