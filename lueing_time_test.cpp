@@ -126,7 +126,7 @@ TEST(LueingTimeTest, GetCurrentTimeInSeconds_IsCloseToNow)
     auto now_seconds = std::chrono::duration_cast<std::chrono::seconds>(
         std::chrono::system_clock::now().time_since_epoch()).count();
     long long got = lueing::TimeUtil::GetCurrentTimeInSeconds();
-    EXPECT_NEAR(now_seconds, got, 1); // Allow a tolerance of 1 second
+    EXPECT_NEAR(static_cast<double>(now_seconds), static_cast<double>(got), 1.0); // Allow a tolerance of 1 second
 }
 
 TEST(LueingTimeTest, GetXTimeInSeconds_MatchesLocalCalculation)
