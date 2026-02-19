@@ -151,4 +151,18 @@ namespace lueing {
         }
         return seconds;
     }
+
+    // ctp date format is YYYYMMDD (20260219), time format is HH:MM:SS (16:14:09)
+    long long TimeUtil::CtpTimeToLongLongTime(const char* date, const char* time)
+    {
+        const long long newTime = ((date[0] - '0') * 10000000 + (date[1] - '0') * 1000000
+                + (date[2] - '0') * 100000 + (date[3] - '0') * 10000
+                + (date[4] - '0') * 1000 + (date[5] - '0') * 100 + (date[6] - '0') * 10 + date[7] - '0') * 1000000000LL
+
+            + (time[0] - '0') * 100000000 + (time[1] - '0') * 10000000
+            + (time[3] - '0') * 1000000 + (time[4] - '0') * 100000
+            + (time[6] - '0') * 10000 + (time[7] - '0') * 1000;
+
+        return newTime;
+    }
 } // namespace lueing

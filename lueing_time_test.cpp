@@ -162,3 +162,36 @@ TEST(LueingTimeTest, GetXTimeInSeconds_MatchesLocalCalculation)
     // Allow one second tolerance because GetXTimeInSeconds calls system_clock::now() internally
     EXPECT_NEAR(static_cast<double>(expected), static_cast<double>(got), 1.0);
 }
+
+TEST(LueingTimeTest, CtpTimeToLongLongTime_BasicConversion)
+{
+    // Test normal date and time conversion
+    // Date: 20260219 (Feb 19, 2026), Time: 16:14:09
+    // Expected: 20260219161409000 (YYYYMMDDHHMMSSmmm format, mmm=000)
+    long long result = lueing::TimeUtil::CtpTimeToLongLongTime("20260219", "16:14:09");
+    EXPECT_EQ(20260219161409000LL, result);
+}
+
+TEST(LueingTimeTest, CtpTimeToLongLongTime_MorningTime)
+{
+    // Test with morning trading time
+    // Date: 20250315 (Mar 15, 2025), Time: 09:30:00
+    long long result = lueing::TimeUtil::CtpTimeToLongLongTime("20250315", "09:30:00");
+    EXPECT_EQ(20250315093000000LL, result);
+}
+
+TEST(LueingTimeTest, CtpTimeToLongLongTime_WithZeros)
+{
+    // Test with zeros in both date and time
+    // Date: 20200101 (Jan 1, 2020), Time: 00:00:00
+    long long result = lueing::TimeUtil::CtpTimeToLongLongTime("20200101", "00:00:00");
+    EXPECT_EQ(20200101000000000LL, result);
+}
+
+TEST(LueingTimeTest, CtpTimeToLongLongTime_EndOfDay)
+{
+    // Test with end of day time
+    // Date: 20261231 (Dec 31, 2026), Time: 23:59:59
+    long long result = lueing::TimeUtil::CtpTimeToLongLongTime("20261231", "23:59:59");
+    EXPECT_EQ(20261231235959000LL, result);
+}
