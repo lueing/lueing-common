@@ -20,6 +20,7 @@ public:
     static long GetXTimeInSeconds();
     // ctp hq time
     static long GetCtpHqTimeInSeconds(const char *time);
+    static long CtpXTimeToSeconds(long long time);
     static long long CtpTimeToLongLongTime(const char *date, const char *time);
 };
 

@@ -152,6 +152,19 @@ namespace lueing {
         return seconds;
     }
 
+    // time is long long type: YYYYMMDDHHMMSSmmm
+    long TimeUtil::CtpXTimeToSeconds(long long time)
+    {
+        time /= 1000;
+        const int seconds = static_cast<int>(time % 100);
+        time /= 100;
+        const int minutes = static_cast<int>(time % 100);
+        time /= 100;
+        const int hours = static_cast<int>(time % 100);
+
+        return hours * 3600 + minutes * 60 + seconds;
+    }
+
     // ctp date format is YYYYMMDD (20260219), time format is HH:MM:SS (16:14:09)
     long long TimeUtil::CtpTimeToLongLongTime(const char* date, const char* time)
     {
