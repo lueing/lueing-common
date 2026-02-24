@@ -18,6 +18,7 @@ public:
     static long long GetCurrentTimeInSeconds();
     // get x time in seconds
     static long GetXTimeInSeconds();
+    static long CurrentTimeInSeconds();
     // ctp hq time
     static long GetCtpHqTimeInSeconds(const char *time);
     static long CtpXTimeToSeconds(long long time);

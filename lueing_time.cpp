@@ -131,6 +131,19 @@ namespace lueing {
         return 0;
     }
 
+    long TimeUtil::CurrentTimeInSeconds()
+    {
+        auto now = std::chrono::system_clock::now();
+        std::time_t now_c = std::chrono::system_clock::to_time_t(now);
+        std::tm now_tm = *std::localtime(&now_c);
+
+        int hour = now_tm.tm_hour;
+        int minute = now_tm.tm_min;
+        int second = now_tm.tm_sec;
+
+        return hour * 3600 + minute * 60 + second;
+    }
+
     long TimeUtil::GetCtpHqTimeInSeconds(const char* time)
     {
         long seconds = -1;
